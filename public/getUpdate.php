@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -87,7 +88,7 @@ function initRequestClient()
     $config && Request::setClient(new Client($config));
 }
 
-
+while (true) {
     // sleep(2);
 
     try {
@@ -114,7 +115,7 @@ function initRequestClient()
 
         // Optional extras.
         $extras = [
-            'admins', 'commands', 'cron', 'paths', 'webhook'
+            'admins', 'commands', 'cron', 'paths', //'webhook'
         ];
         foreach ($extras as $extra) {
             if ($param = getenv('TG_' . strtoupper($extra))) {
@@ -136,13 +137,13 @@ function initRequestClient()
         $bot = new BotManager($params);
         $bot = new BotManager($params);
         // enable on webhook
-        $bot->setCustomGetUpdatesCallback(function (ServerResponse $get_updates_response) {
-            $results = array_filter((array) $get_updates_response->getResult());
+        // $bot->setCustomGetUpdatesCallback(function (ServerResponse $get_updates_response) {
+        //     $results = array_filter((array) $get_updates_response->getResult());
 
-            return sprintf('There are %d update(s)' . PHP_EOL, count($results));
-        });
+        //     return sprintf('There are %d update(s)' . PHP_EOL, count($results));
+        // });
         $bot->run();
     } catch (Throwable $e) {
         TelegramLog::error($e->getMessage());
     }
-
+}
