@@ -28,6 +28,8 @@ use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Request;
 use TelegramBot\SupportBot\Helpers;
 use TelegramBot\SupportBot\Models\User;
+use Longman\TelegramBot\DB;
+use PDO;
 
 /**
  * System "/start" command
@@ -67,13 +69,32 @@ class StartCommand extends SystemCommand
     {
         if ('activate' === $this->getMessage()->getText(true)) {
             return $this->getTelegram()->executeCommand('activate');
-        }
-
-        if ('rules' === $this->getMessage()->getText(true)) {
+        } elseif ('rules' === $this->getMessage()->getText(true)) {
             return $this->getTelegram()->executeCommand('rules');
-        }
+        } elseif (empty($this->getMessage()->getText(true))) {
+            return $this->privateExecute();
+        } else {
+            $userHaveRef = User::getByIds((int) $this->getMessage()->getChat()->getId());
+            if (empty($userHaveRef['refferal'])) {
+                $refferal_id = ($this->getMessage()->getText(true)) ? $this->getMessage()->getText(true) : NULL;
+                User::updateById($this->getMessage()->getChat()->getId(), ['refferal' => $refferal_id]);
 
-        return $this->privateExecute();
+                $notify = User::getByIds((int) $refferal_id);
+
+                $out_text = "Hi @{$notify['username']} \n\n";
+                $out_text .= "{$this->getMessage()->getChat()->tryMention(true)} Baru Saja Join Downline Kamu";
+
+                Request::sendMessage([
+                    'text' => LitEmoji::encodeUnicode($out_text),
+                    'chat_id' => $notify['id'],
+                    'parse_mode' => 'markdown',
+                ]);
+
+                return $this->privateExecute();
+            } else {
+                return $this->privateExecute();
+            }
+        }
     }
 
     public function privateExecute(): ServerResponse
