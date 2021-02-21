@@ -15,6 +15,7 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\UserCommands\DonateCommand;
+use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
@@ -49,6 +50,14 @@ class GenericmessageCommand extends SystemCommand
     {
         $message = $this->getMessage();
         $user_id = $message->getFrom()->getId();
+
+        $text = trim($this->getMessage()->getText(true));
+
+        if ($text === 'Profile') {
+            $update = json_decode($this->update->toJson(), true);
+            $update['message']['text'] = '/profile';
+            return $this->getTelegram()->executeCommand('profile');
+        }
 
         // Handle new chat members.
         if ($message->getNewChatMembers()) {
