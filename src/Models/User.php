@@ -15,18 +15,23 @@ use Envms\FluentPDO\Literal;
 
 class User
 {
-    protected static $pdo;
 
-    public function __construct()
-    {
-        self::$pdo = DB::getPdo();
-    }
 
     public static function getAll()
     {
-        // $pdo = DB::getPdo();
-        $fpdo = new FluentPDO(self::$pdo);
+        $pdo = DB::getPdo();
+        $fpdo = new FluentPDO($pdo);
         $query = $fpdo->from('user');
+        $row = $query->fetchAll();
+
+        return $row;
+    }
+
+    public static function getRefId($ids)
+    {
+        $pdo = DB::getPdo();
+        $fpdo = new FluentPDO($pdo);
+        $query = $fpdo->from('user')->where('refferal', $ids);
         $row = $query->fetchAll();
 
         return $row;
@@ -72,8 +77,6 @@ class User
     public static function decreaseBalance($ids, $amount)
     {
 
-
-
         $pdo = DB::getPdo();
         $fpdo = new FluentPDO($pdo);
         $query = $fpdo->update('user')
@@ -83,20 +86,6 @@ class User
             ->where('id', $ids);
 
         return $query->execute();
-    }
-
-    public static function deleteMessageBy($chat_id)
-    {
-
-        $pdo = DB::getPdo();
-        $fpdo = new FluentPDO($pdo);
-        $query = $fpdo->from('message')
-            ->where('chat_id', $chat_id);
-
-        $row = $query->fetchAll();
-
-
-        return $row;
     }
 
     public static function getUserData($id)

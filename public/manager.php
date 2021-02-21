@@ -89,7 +89,7 @@ function initRequestClient()
 }
 
 while (true) {
-    sleep(5);
+    // sleep(2);
 
     try {
         // Vitals!
