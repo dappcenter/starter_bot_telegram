@@ -62,25 +62,155 @@ class HelpCommand extends UserCommand
      */
     protected $private_only = true;
 
+    public static $menus = [
+        '1' => 'command=help&a=1',
+        '2' => 'command=help&a=2',
+        '3' => 'command=help&a=3',
+        '4' => 'command=help&a=4',
+        '5' => 'command=help&a=5',
+    ];
+
+    public static function handleCallbackQuery(CallbackQuery $callback_query, array $callback_data): ServerResponse
+    {
+
+        if ('1' === $callback_data['a'] ?? null) {
+            $message         = $callback_query->getMessage();
+            $chat_id         = $message->getChat()->getId();
+            $clicked_user_id = $callback_query->getFrom()->getId();
+
+            $text = 'https://bantuan.com/' . PHP_EOL;
+
+
+            return Request::editMessageText([
+                'text' => LitEmoji::encodeUnicode($text),
+                'chat_id'      => $chat_id,
+                'message_id'   => $message->getMessageId(),
+                'parse_mode' => 'Markdown',
+                'reply_markup'             => new InlineKeyboard([
+                    ['text' => LitEmoji::encodeUnicode(':radio_button: Back'), 'callback_data' => 'command=help&a=back'],
+                ]),
+            ]);
+        }
+
+        if ('2' === $callback_data['a'] ?? null) {
+            $message         = $callback_query->getMessage();
+            $chat_id         = $message->getChat()->getId();
+            $clicked_user_id = $callback_query->getFrom()->getId();
+
+            $text = 'https://bantuan.com/' . PHP_EOL;
+
+
+            return Request::editMessageText([
+                'text' => LitEmoji::encodeUnicode($text),
+                'chat_id'      => $chat_id,
+                'message_id'   => $message->getMessageId(),
+                'parse_mode' => 'Markdown',
+                'reply_markup'             => new InlineKeyboard([
+                    ['text' => LitEmoji::encodeUnicode(':radio_button: Back'), 'callback_data' => 'command=help&a=back'],
+                ]),
+            ]);
+        }
+
+        if ('3' === $callback_data['a'] ?? null) {
+            $message         = $callback_query->getMessage();
+            $chat_id         = $message->getChat()->getId();
+            $clicked_user_id = $callback_query->getFrom()->getId();
+
+            $text = 'https://bantuan.com/' . PHP_EOL;
+
+
+            return Request::editMessageText([
+                'text' => LitEmoji::encodeUnicode($text),
+                'chat_id'      => $chat_id,
+                'message_id'   => $message->getMessageId(),
+                'parse_mode' => 'Markdown',
+                'reply_markup'             => new InlineKeyboard([
+                    ['text' => LitEmoji::encodeUnicode(':radio_button: Back'), 'callback_data' => 'command=help&a=back'],
+                ]),
+            ]);
+        }
+
+        if ('4' === $callback_data['a'] ?? null) {
+            $message         = $callback_query->getMessage();
+            $chat_id         = $message->getChat()->getId();
+            $clicked_user_id = $callback_query->getFrom()->getId();
+
+            $text = 'https://bantuan.com/' . PHP_EOL;
+
+
+            return Request::editMessageText([
+                'text' => LitEmoji::encodeUnicode($text),
+                'chat_id'      => $chat_id,
+                'message_id'   => $message->getMessageId(),
+                'parse_mode' => 'Markdown',
+                'reply_markup'             => new InlineKeyboard([
+                    ['text' => LitEmoji::encodeUnicode(':radio_button: Back'), 'callback_data' => 'command=help&a=back'],
+                ]),
+            ]);
+        }
+
+        if ('5' === $callback_data['a'] ?? null) {
+            $message         = $callback_query->getMessage();
+            $chat_id         = $message->getChat()->getId();
+            $clicked_user_id = $callback_query->getFrom()->getId();
+
+            $text = 'https://bantuan.com/' . PHP_EOL;
+
+
+            return Request::editMessageText([
+                'text' => LitEmoji::encodeUnicode($text),
+                'chat_id'      => $chat_id,
+                'message_id'   => $message->getMessageId(),
+                'parse_mode' => 'Markdown',
+                'reply_markup'             => new InlineKeyboard([
+                    ['text' => LitEmoji::encodeUnicode(':radio_button: Back'), 'callback_data' => 'command=help&a=back'],
+                ]),
+            ]);
+        }
+
+
+
+
+        return $callback_query->answer([
+            'text' => 'Awesome',
+        ]);
+    }
+
     /**
      * @inheritdoc
      */
     public function execute(): ServerResponse
     {
-        $message     = $this->getMessage();
-        $chat_id = $message->getChat()->getId();
-        $command_str = trim($message->getText(true));
+        $message = $this->getMessage() ?: $this->getCallbackQuery()->getMessage();
 
-        $greeting = Helpers::greeting();
-        $username_bot = getenv('TG_BOTNAME');
-        $out_text = "{$greeting} {$message->getChat()->tryMention(true)} ! \n\n";
-        $out_text .= "Selamat Datang di {$username_bot}";
+        $chat_id = $message->getChat()->getId();
+        $text = trim($message->getText(true));
+
+
+
+        $out_text = "*FAQ* \n\n";
+        $out_text .= "1. Tentang Bot :robot: \n";
+        $out_text .= "2. Cara Topup :atm: \n";
+        $out_text .= "3. Cara Withdraw :bank: \n";
+        $out_text .= "4. Cara Transaksi :moneybag: \n";
+        $out_text .= "5. Tanya Admin :cop: \n";
+
+        $keyboard_buttons = [];
+        foreach (self::$menus as $key => $value) {
+            $keyboard_buttons[] = new InlineKeyboardButton([
+                'text' => $key,
+                'callback_data' => $value,
+            ]);
+        }
+        $keyboard_rows = array_chunk($keyboard_buttons, 2);
+        $reply_markup = new InlineKeyboard(...$keyboard_rows);
+
 
         return Request::sendMessage([
             'text' => LitEmoji::encodeUnicode($out_text),
             'chat_id' => $chat_id,
             'parse_mode' => 'markdown',
-            // 'reply_markup' => $reply_markup
+            'reply_markup' =>  $reply_markup
         ]);
     }
 }

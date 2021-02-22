@@ -89,8 +89,6 @@ function initRequestClient()
 }
 
 while (true) {
-    // sleep(2);
-
     try {
         // Vitals!
         $params = [

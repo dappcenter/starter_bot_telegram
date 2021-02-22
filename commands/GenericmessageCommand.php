@@ -59,6 +59,12 @@ class GenericmessageCommand extends SystemCommand
             return $this->getTelegram()->executeCommand('profile');
         }
 
+        if ($text === 'Bantuan') {
+            $update = json_decode($this->update->toJson(), true);
+            $update['message']['text'] = '/help';
+            return $this->getTelegram()->executeCommand('help');
+        }
+
         // Handle new chat members.
         if ($message->getNewChatMembers()) {
             $this->deleteThisMessage(); // Service message.

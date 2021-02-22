@@ -15,6 +15,7 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\UserCommands\DonateCommand;
 use Longman\TelegramBot\Commands\UserCommands\RulesCommand;
 use Longman\TelegramBot\Commands\UserCommands\ProfileCommand;
+use Longman\TelegramBot\Commands\UserCommands\HelpCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Update;
@@ -77,6 +78,24 @@ class CallbackqueryCommand extends SystemCommand
                 // return $this->getTelegram()->executeCommand('editbank');
             } else {
                 return ProfileCommand::handleCallbackQuery($callback_query, $callback_data);
+            }
+        }
+
+        if ('help' === $callback_data['command']) {
+            if ('back' === $callback_data['a']) {
+                $message = $this->getMessage() ?: $this->getCallbackQuery()->getMessage();
+                $data = [
+                    'chat_id' => $message->getChat()->getId(),
+                    'message_id' => $message->getMessageId()
+                ];
+
+                $result = Request::deleteMessage($data);
+
+                if ($result->isOk()) {
+                    return $this->getTelegram()->executeCommand('help');
+                }
+            } else {
+                return HelpCommand::handleCallbackQuery($callback_query, $callback_data);
             }
         }
 
