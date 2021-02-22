@@ -125,9 +125,13 @@ class ProfileCommand extends UserCommand
             $text .= '===================================' .  PHP_EOL;
             $getRefferalin = User::getRefId($clicked_user_id);
             $i = 0;
-            foreach ($getRefferalin as $row) {
-                $i++;
-                $text .= $i . '. ' . $row['first_name'] . ' ' . $row['last_name'] .  PHP_EOL;
+            if (!empty($getRefferalin)) {
+                foreach ($getRefferalin as $row) {
+                    $i++;
+                    $text .= $i . '. ' . $row['first_name'] . ' ' . $row['last_name'] .  PHP_EOL;
+                }
+            } else {
+                $text .= 'Belum Memiliki Downline' .  PHP_EOL;
             }
 
             Helpers::jsonDebug($getRefferalin);
