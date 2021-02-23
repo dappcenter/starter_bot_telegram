@@ -51,6 +51,18 @@ class GenericmessageCommand extends SystemCommand
         $message = $this->getMessage();
         $user_id = $message->getFrom()->getId();
 
+
+        // If a conversation is busy, execute the conversation command after handling the message.
+        $conversation = new Conversation(
+            $message->getFrom()->getId(),
+            $message->getChat()->getId()
+        );
+
+        // Fetch conversation command if it exists and execute it.
+        if ($conversation->exists() && $command = $conversation->getCommand()) {
+            return $this->telegram->executeCommand($command);
+        }
+
         $text = trim($this->getMessage()->getText(true));
 
         if ($text === 'Profile') {
