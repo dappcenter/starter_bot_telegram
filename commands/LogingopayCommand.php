@@ -1,13 +1,13 @@
 <?php
 
 /**
-* This file is part of the TelegramBot package.
-*
-* (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
-*
-* For the full copyright and license information, please view the LICENSE
-* file that was distributed with this source code.
-*/
+ * This file is part of the TelegramBot package.
+ *
+ * (c) Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Longman\TelegramBot\Commands\AdminCommands;
 
@@ -28,43 +28,43 @@ use TelegramBot\SupportBot\GojekPay;
 class LogingopayCommand extends AdminCommand
 {
   /**
-  * @var string
-  */
+   * @var string
+   */
   protected $name = 'logingopay';
 
   /**
-  * @var string
-  */
+   * @var string
+   */
   protected $description = 'Melakukan Login Ke Gopay';
 
   /**
-  * @var string
-  */
+   * @var string
+   */
   protected $usage = '/logingopay';
 
   /**
-  * @var string
-  */
+   * @var string
+   */
   protected $version = '0.3.0';
 
   /**
-  * @var bool
-  */
+   * @var bool
+   */
   protected $need_mysql = true;
 
   /**
-  * Conversation Object
-  *
-  * @var Conversation
-  */
+   * Conversation Object
+   *
+   * @var Conversation
+   */
   protected $conversation;
 
   /**
-  * Command execute method
-  *
-  * @return ServerResponse|mixed
-  * @throws TelegramException
-  */
+   * Command execute method
+   *
+   * @return ServerResponse|mixed
+   * @throws TelegramException
+   */
   public function execute(): ServerResponse
   {
     $message = $this->getMessage() ?: $this->getCallbackQuery()->getMessage();
@@ -120,9 +120,9 @@ class LogingopayCommand extends AdminCommand
 
           $data['text'] = 'Melakukan Login Kembali akan Menyebabkan Session Tertimpa Tekan Lanjut Jika Belum Melakukan Login:';
           $data['reply_markup'] = (new Keyboard(['Lanjut', 'Batalkan']))
-          ->setResizeKeyboard(true)
-          ->setOneTimeKeyboard(true)
-          ->setSelective(true);
+            ->setResizeKeyboard(true)
+            ->setOneTimeKeyboard(true)
+            ->setSelective(true);
 
           if ($text === 'Batalkan') {
             $text = 'Di Batalkan';
@@ -141,100 +141,99 @@ class LogingopayCommand extends AdminCommand
         $text = '';
 
         // No break!
-        case 1:
-          if ($text === '' || !is_numeric($text)) {
-            $notes['state'] = 1;
-            $this->conversation->update();
+      case 1:
+        if ($text === '' || !is_numeric($text)) {
+          $notes['state'] = 1;
+          $this->conversation->update();
 
-            $data['text'] = 'Silahkan Input Nomor Telp Gojek:';
-            $data['reply_markup'] = Keyboard::remove(['selective' => true]);
+          $data['text'] = 'Silahkan Input Nomor Telp Gojek:';
+          $data['reply_markup'] = Keyboard::remove(['selective' => true]);
 
-            $result = Request::sendMessage($data);
-            break;
-          }
+          $result = Request::sendMessage($data);
+          break;
+        }
 
-          $notes['phone_number'] = $text;
+        $notes['phone_number'] = $text;
 
-          $refid = $gopay->loginRequest($text);
-          $refid = json_decode($refid, true);
-          $notes['refid'] = $refid['data']['otp_token'];
-          $text = '';
+        $refid = $gopay->loginRequest($text);
+        $refid = json_decode($refid, true);
+        $notes['refid'] = $refid['data']['otp_token'];
+        $text = '';
 
-          // No break!
-          case 2:
-            if ($text === '') {
-              $notes['state'] = 2;
-              $this->conversation->update();
+        // No break!
+      case 2:
+        if ($text === '') {
+          $notes['state'] = 2;
+          $this->conversation->update();
 
-              $data['reply_markup'] = Keyboard::remove(['selective' => true]);
+          $data['reply_markup'] = Keyboard::remove(['selective' => true]);
 
-              $data['text'] = 'Inputkan Kode OTP yang dikirim Lewat SMS:';
-
-
-              $result = Request::sendMessage($data);
-              break;
-            }
-
-            $notes['otp'] = $text;
-            $tokenUpdate = $gopay->getAuthToken($notes['refid'], $text);
-            $tokenUpdate = json_decode($tokenUpdate, true);
-            $notes['tokenAuth'] = $tokenUpdate['access_token'];
-            $text = '';
-            Helpers::DebugMyCommand($tokenUpdate);
-
-            // No break!
-            case 3:
-              if ($text === '') {
-                $notes['state'] = 3;
-                $this->conversation->update();
-
-                $data['reply_markup'] = Keyboard::remove(['selective' => true]);
-
-                $data['text'] = 'Inputkan Pin Gojek Kamu:';
+          $data['text'] = 'Inputkan Kode OTP yang dikirim Lewat SMS:';
 
 
-                $result = Request::sendMessage($data);
-                break;
-              }
+          $result = Request::sendMessage($data);
+          break;
+        }
 
-              $notes['pin'] = $text;
-
-
-              // No break!
-              case 6:
-                $this->conversation->update();
-
-                $input_data = [
-                  'phone_number' => $notes['phone_number'],
-                  'otp' => $notes['otp'],
-                  'pin' => $notes['pin'],
-                  'authToken' => $notes['tokenAuth'],
-                ];
+        $notes['otp'] = $text;
+        $tokenUpdate = $gopay->getAuthToken($notes['refid'], $text);
+        $tokenUpdate = json_decode($tokenUpdate, true);
+        $notes['tokenAuth'] = $tokenUpdate['access_token'];
+        $text = '';
 
 
-                $fp = fopen(__DIR__ . '/temp/gojek_session.json', 'w');
+        // No break!
+      case 3:
+        if ($text === '') {
+          $notes['state'] = 3;
+          $this->conversation->update();
 
-                fwrite($fp, json_encode($input_data, JSON_PRETTY_PRINT));
+          $data['reply_markup'] = Keyboard::remove(['selective' => true]);
 
-                fclose($fp);
-
-                $out_text = '##### Anda Berhasil Login #####' . PHP_EOL;
-                $out_text .= 'Hanya Admin Yang Bisa Menggunakan Command Ini' . PHP_EOL;
-
-
-
-                $data['text'] = $out_text;
+          $data['text'] = 'Inputkan Pin Gojek Kamu:';
 
 
-                $this->conversation->stop();
+          $result = Request::sendMessage($data);
+          break;
+        }
 
-                $result = Request::sendMessage($data);
-                break;
-          }
+        $notes['pin'] = $text;
+
+
+        // No break!
+      case 6:
+        $this->conversation->update();
+
+        $input_data = [
+          'phone_number' => $notes['phone_number'],
+          'otp' => $notes['otp'],
+          'pin' => $notes['pin'],
+          'authToken' => $notes['tokenAuth'],
+        ];
+
+
+        $fp = fopen(__DIR__ . '/temp/gojek_session.json', 'w');
+
+        fwrite($fp, json_encode($input_data, JSON_PRETTY_PRINT));
+
+        fclose($fp);
+
+        $out_text = '##### Anda Berhasil Login #####' . PHP_EOL;
+        $out_text .= 'Hanya Admin Yang Bisa Menggunakan Command Ini' . PHP_EOL;
 
 
 
-          return $result;
-      }
+        $data['text'] = $out_text;
 
+
+        $this->conversation->stop();
+
+        $result = Request::sendMessage($data);
+        break;
     }
+
+
+
+    return $result;
+  }
+}
