@@ -17,6 +17,7 @@ Template Reactmore Bot
 - [PHP Telegram Bot Core]
 - [PHP Telegram Bot Support]
 - [namdevel for Gopay Api] 
+- [Fluent PDO Query Builder] 
 
 [PHP Telegram Bot Support]: https://t.me/PHP_Telegram_Bot_Support "@PHP_Telegram_Bot_Support"
 [PHP Telegram Bot Core]: https://github.com/php-telegram-bot/core 
