@@ -7,3 +7,4 @@ composer.phar
 commands/temp/gojek_session.json
 commands/temp/ibank_958587442_session.json
 src/Utils/cookiejar
+commands/temp/gojek_session.json
