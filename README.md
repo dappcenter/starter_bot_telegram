@@ -14,8 +14,10 @@ Template Reactmore Bot
 
 ## Credit
 
-[PHP Telegram Bot Core]
-[PHP Telegram Bot Support]
+- [PHP Telegram Bot Core]
+- [PHP Telegram Bot Support]
+- [namdevel for Gopay Api] 
 
 [PHP Telegram Bot Support]: https://t.me/PHP_Telegram_Bot_Support "@PHP_Telegram_Bot_Support"
 [PHP Telegram Bot Core]: https://github.com/php-telegram-bot/core 
+[namdevel for Gopay Api]: https://github.com/namdevel/gopay-api 
