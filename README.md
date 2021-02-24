@@ -1,12 +1,21 @@
-# Support-Bot
+# Reactmore Bot Template
 
-Assistant bot for the [PHP Telegram Bot Support] group.
+Template Reactmore Bot
 
-## Commands
+## TO DO
 
-- `/help`: A short description of the bot and a list of all available commands.
-- `/id`: Display the user and chat information. Also, try forwarding any message from a channel to display the channel information.
-- `/rules`: Show the rules that apply in the support group.
-- `/donate`: Donate to the project using Telegram Payments.
+- Refferall System.
+- Balance System.
+- Gopay Receiving Payment.
+- Tripay Payment.
+- Internet Banking (BCA) Receiving Payment.
+- Admin Panel For Shop Bot.
+- Send To Channel With Styling.
+
+## Credit
+
+[PHP Telegram Bot Core]
+[PHP Telegram Bot Support]
 
 [PHP Telegram Bot Support]: https://t.me/PHP_Telegram_Bot_Support "@PHP_Telegram_Bot_Support"
+[PHP Telegram Bot Core]: https://github.com/php-telegram-bot/core 
