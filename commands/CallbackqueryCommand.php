@@ -15,9 +15,15 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Commands\UserCommands\DonateCommand;
 use Longman\TelegramBot\Commands\UserCommands\RulesCommand;
 use Longman\TelegramBot\Commands\UserCommands\ProfileCommand;
+
 use Longman\TelegramBot\Commands\UserCommands\HelpCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Entities\Chat;
+use Longman\TelegramBot\Entities\Entity;
+use Longman\TelegramBot\Entities\Keyboard;
+use Longman\TelegramBot\Entities\Message;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Request;
 use TelegramBot\SupportBot\Helpers;
@@ -74,8 +80,8 @@ class CallbackqueryCommand extends SystemCommand
                     return $this->getTelegram()->executeCommand('profile');
                 }
             } elseif ('edit' === $callback_data['a']) {
-                return $callback_query->answer();
-                // return $this->getTelegram()->executeCommand('editbank');
+                // return $callback_query->answer();
+                return $this->getTelegram()->executeCommand('editprofile');
             } else {
                 return ProfileCommand::handleCallbackQuery($callback_query, $callback_data);
             }
