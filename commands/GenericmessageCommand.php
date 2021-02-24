@@ -77,6 +77,12 @@ class GenericmessageCommand extends SystemCommand
             return $this->getTelegram()->executeCommand('help');
         }
 
+        if ($text === 'Withdraw') {
+            $update = json_decode($this->update->toJson(), true);
+            $update['message']['text'] = '/withdraw';
+            return $this->getTelegram()->executeCommand('withdraw');
+        }
+
         // Handle new chat members.
         if ($message->getNewChatMembers()) {
             $this->deleteThisMessage(); // Service message.
