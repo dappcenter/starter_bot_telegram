@@ -1,0 +1,2 @@
+24/02/2021
+ALTER TABLE `user` ADD `wallet` VARCHAR(250) NULL AFTER `refferal`, ADD `wallet_account` VARCHAR(250) NULL AFTER `wallet`;

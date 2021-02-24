@@ -1,6 +1,7 @@
 composer.phar
 /logs/*
 !/logs/.gitkeep
+!/logs/update_database.txt
 /vendor/
 /.env
 commands/temp/gojek_session.json
