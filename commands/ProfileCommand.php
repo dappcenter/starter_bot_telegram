@@ -175,6 +175,8 @@ class ProfileCommand extends UserCommand
             $created_at = $result['chat_created_at'];
             $updated_at = $result['chat_updated_at'];
             $old_id     = $result['old_id'];
+            $wallet     = $result['wallet'];
+            $wallet_account     = $result['wallet_account'];
         }
 
 
@@ -186,6 +188,12 @@ class ProfileCommand extends UserCommand
         if ($username !== null && $username !== '') {
             $text .= 'Username: @' . $username . PHP_EOL;
         }
+
+        if (!empty($wallet)) {
+            $text .= 'Wallet Info : ' . $wallet . PHP_EOL;
+            $text .= 'Wallet Account : ' . $wallet_account . PHP_EOL;
+        }
+
         $text .= 'Join : ' . $created_at . PHP_EOL;
         $text .= 'Last activity: ' . $updated_at . PHP_EOL;
 
